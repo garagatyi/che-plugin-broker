@@ -64,7 +64,6 @@ func Start(metas []model.PluginMeta) {
 		}
 	}
 
-	log.Println("Set success status")
 	if ok, status := storage.SetStatus(model.StatusDone); !ok {
 		err := fmt.Sprintf("Setting '%s' broker status failed. Broker has '%s' state", model.StatusDone, status)
 		pubFailed(err)
