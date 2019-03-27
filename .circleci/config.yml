@@ -26,10 +26,13 @@ jobs:
             go tool cover -html=c.out -o coverage.html
             cp coverage.html /tmp/artifacts
             cp c.out coverage.txt
+      - run:
+          name: "Save coverage to codecov"
+          command: |
+            bash <(curl -s https://codecov.io/bash)
       - run: 
           name: "Run GolangCI linter"
           command: |
             golangci-lint run -v
       - store_artifacts:
           path: /tmp/artifacts
-
