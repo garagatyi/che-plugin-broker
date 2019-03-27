@@ -3,7 +3,7 @@ test test
 # This repo contains implementations of several Che plugin brokers
 
 ## init-plugin-broker
-
+sssss
 Cleanups content of /plugins/ folder.
 Should be started before other brokers not to remove files they are adding to plugins folder.
 
