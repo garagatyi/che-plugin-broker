@@ -5,7 +5,7 @@
 ## init-plugin-broker
 
 Cleanups content of /plugins/ folder.
-Should be started before other brokers not to remove files they are adding to plugins folder.
+Should be started before other brokers not txdsdxasxcasxcaso remove files they are adding to plugins folder.
 
 ## unified-plugin-broker
 
