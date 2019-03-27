@@ -22,10 +22,10 @@ jobs:
       - run: 
           name: "Run tests"
           command: |
-            go test -v -race ./... -coverprofile=c.out
+            go test -v -race ./... -coverprofile=c.out -covermode=atomic
             go tool cover -html=c.out -o coverage.html
             cp coverage.html /tmp/artifacts
-            cp coverage.html coverage.txt
+            cp c.out coverage.txt
       - run: 
           name: "Run GolangCI linter"
           command: |
