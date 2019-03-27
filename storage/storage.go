@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2018 Red Hat, Inc.
+// Copyright (c) 2018-2019 Red Hat, Inc.
 // This program and the accompanying materials are made
 // available under the terms of the Eclipse Public License 2.0
 // which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -18,31 +18,35 @@ import (
 	"github.com/eclipse/che-plugin-broker/model"
 )
 
-var s = &Storage{
-	status: model.StatusIdle,
+// New creates new instance of storage
+func New() *Storage {
+	return &Storage{
+		status: model.StatusIdle,
+	}
 }
 
+// Storage stores broker execution results
 type Storage struct {
 	sync.RWMutex
 	status  model.BrokerStatus
-	err     string
-	logs    []string
-	tooling []model.ToolingConf
+	plugins []model.ChePlugin
 }
 
-func Status() model.BrokerStatus {
+// Status returns current status of broker execution
+func (s *Storage) Status() model.BrokerStatus {
 	s.Lock()
 	defer s.Unlock()
 	return s.status
 }
 
-func SetStatus(status model.BrokerStatus) (ok bool, currentValue model.BrokerStatus) {
+// SetStatus sets current status of broker execution
+func (s *Storage) SetStatus(status model.BrokerStatus) (ok bool, currentValue model.BrokerStatus) {
 	s.Lock()
 	defer s.Unlock()
 	switch {
-	case s.status == model.StatusIdle && status == model.StatusStarting:
+	case s.status == model.StatusIdle && status == model.StatusStarted:
 		fallthrough
-	case s.status == model.StatusStarting && status == model.StatusDone:
+	case s.status == model.StatusStarted && status == model.StatusDone:
 		s.status = status
 		return true, status
 	default:
@@ -50,41 +54,27 @@ func SetStatus(status model.BrokerStatus) (ok bool, currentValue model.BrokerSta
 	}
 }
 
-func Err() string {
+// Plugins returns configuration of Che Plugins resolved during the broker execution.
+// At any particular point of time configuration might be incomplete if tooling resolution failed or not completed yet
+func (s *Storage) Plugins() (*[]model.ChePlugin, error) {
 	s.Lock()
 	defer s.Unlock()
-	return s.err
+	return &s.plugins, nil
 }
 
-func SetErr(err string) {
+// AddPlugin adds configuration of model.ChePlugin to the results of broker execution
+// by combining model.ToolingConf and model.PluginMeta
+func (s *Storage) AddPlugin(meta *model.PluginMeta, tooling *model.ToolingConf) error {
 	s.Lock()
 	defer s.Unlock()
-	s.err = err
-}
-
-func Logs() *[]string {
-	s.Lock()
-	defer s.Unlock()
-	logsCopy := []string{}
-	copy(logsCopy, s.logs)
-	return &logsCopy
-}
-
-func AppendLogs(log string) {
-	s.Lock()
-	defer s.Unlock()
-	s.logs = append(s.logs, log)
-}
-
-func Tooling() (*[]model.ToolingConf, error) {
-	s.Lock()
-	defer s.Unlock()
-	return &s.tooling, nil
-}
-
-func AddTooling(tooling *model.ToolingConf) error {
-	s.Lock()
-	defer s.Unlock()
-	s.tooling = append(s.tooling, *tooling)
+	plugin := &model.ChePlugin{
+		ID:           meta.ID,
+		Version:      meta.Version,
+		Containers:   tooling.Containers,
+		Editors:      tooling.Editors,
+		Endpoints:    tooling.Endpoints,
+		WorkspaceEnv: tooling.WorkspaceEnv,
+	}
+	s.plugins = append(s.plugins, *plugin)
 	return nil
 }
