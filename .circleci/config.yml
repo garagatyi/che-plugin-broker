@@ -32,7 +32,4 @@ jobs:
             golangci-lint run -v
       - store_artifacts:
           path: /tmp/artifacts
-      - run:
-          name: "Save coverage to codecov"
-          command: |
-            bash <(curl -s https://codecov.io/bash)
+
