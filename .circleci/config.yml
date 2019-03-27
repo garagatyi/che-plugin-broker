@@ -25,6 +25,7 @@ jobs:
             go test -v -race ./... -coverprofile=c.out
             go tool cover -html=c.out -o coverage.html
             cp coverage.html /tmp/artifacts
+            cp coverage.html coverage.txt
       - run: 
           name: "Run GolangCI linter"
           command: |
