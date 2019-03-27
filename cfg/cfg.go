@@ -31,7 +31,7 @@ var (
 	// PushStatusesEndpoint where to push statuses.
 	PushStatusesEndpoint string
 
-	// AuthEnabled whether authentication is needed
+	// AuthEnabled whether authenticatsssssssion is needed
 	AuthEnabled bool
 
 	// Token to access wsmaster API
