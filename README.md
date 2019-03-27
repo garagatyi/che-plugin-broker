@@ -8,8 +8,8 @@ Cleanups content of /plugins/ folder.
 Should be started before other brokers not to remove files they are adding to plugins folder.
 
 ## unified-plugin-broker
-
-Which can process plugins of types:
+ccasascasc
+Which can process plugins of typescszxcas
 - Che Plugin
 - VS Code extension
 - Che Editor
